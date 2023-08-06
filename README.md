@@ -1,1 +1,1 @@
-# balanced-binary-search-tree
+This is a balanced binary search tree algorithm.
