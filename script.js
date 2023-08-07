@@ -1,11 +1,14 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-console */
+
 const nodeFactory = (data) => {
-  let left;
-  let right;
+  const left = null;
+  const right = null;
   return { data, left, right };
 };
 
 const treeFactory = (array) => {
-  // Merge sort function
+  // Merge function
   function merge(arr, low, mid, high) {
     let i = 0;
     let j = 0;
@@ -30,6 +33,7 @@ const treeFactory = (array) => {
   }
 
   function mergeSort(arr, low, high) {
+    // Merge sort algorithm
     if (low === undefined) {
       low = 0;
     }
@@ -45,13 +49,8 @@ const treeFactory = (array) => {
     }
   }
 
-  // Sort array objects
-  const unsortedArr = Array.from(array);
-  mergeSort(unsortedArr);
-  const sortedArr = Array.from(new Set(unsortedArr));
-
-  // Recusive call left and right side of middle node
   function buildTree(arr, start, end) {
+    // Recursive call left and right side of middle node
     if (start === undefined) {
       start = 0;
     }
@@ -70,9 +69,42 @@ const treeFactory = (array) => {
     return node;
   }
 
+  function insert(value, node) {
+    // Insert value at leaf node
+    if (node === undefined) {
+      node = root;
+    }
+
+    if (node.left === null && value < node.data) {
+      node.left = nodeFactory(value);
+      return;
+    }
+
+    if (node.right === null && value > node.data) {
+      node.right = nodeFactory(value);
+      return;
+    }
+
+    if (value === node.data) {
+      return;
+    }
+
+    if (value < node.data) {
+      insert(value, node.left);
+    } else {
+      insert(value, node.right);
+    }
+  }
+
+  // Sort array objects
+  const unsortedArr = Array.from(array);
+  mergeSort(unsortedArr);
+  const sortedArr = Array.from(new Set(unsortedArr));
+
+  // Build root node
   const root = buildTree(sortedArr);
 
-  return root;
+  return { insert, root };
 };
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -89,4 +121,4 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 const tree = treeFactory([1, 7, 4, 23, 8, 9, 4, 3, 5, 76, 67, 6345, 18, 324]);
-prettyPrint(tree);
+prettyPrint(tree.root);
