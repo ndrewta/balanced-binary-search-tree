@@ -96,6 +96,40 @@ const treeFactory = (array) => {
     }
   }
 
+  function remove(value, node) {
+    // Search for value within tree and delete
+    if (node === undefined) {
+      node = root;
+    }
+
+    // Case 1: Verify if leaf node then delete
+    if (
+      node.left !== null &&
+      node.left.data === value &&
+      node.left.left === null &&
+      node.left.right === null
+    ) {
+      node.left = null;
+      return;
+    }
+
+    if (
+      node.right !== null &&
+      node.right.data === value &&
+      node.right.left === null &&
+      node.right.right === null
+    ) {
+      node.right = null;
+      return;
+    }
+
+    if (value < node.data) {
+      remove(value, node.left);
+    } else {
+      remove(value, node.right);
+    }
+  }
+
   // Sort array objects
   const unsortedArr = Array.from(array);
   mergeSort(unsortedArr);
@@ -104,7 +138,7 @@ const treeFactory = (array) => {
   // Build root node
   const root = buildTree(sortedArr);
 
-  return { insert, root };
+  return { insert, remove, root };
 };
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -121,4 +155,9 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 const tree = treeFactory([1, 7, 4, 23, 8, 9, 4, 3, 5, 76, 67, 6345, 18, 324]);
+prettyPrint(tree.root);
+tree.insert(24);
+tree.insert(25);
+tree.insert(425);
+tree.insert(421);
 prettyPrint(tree.root);
