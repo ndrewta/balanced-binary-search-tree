@@ -102,6 +102,27 @@ const treeFactory = (array) => {
       node = root;
     }
 
+    // If value doesn't exist
+    if (
+      node.left !== null &&
+      node.left.data !== value &&
+      node.left.left === null &&
+      node.left.right === null
+    ) {
+      console.log("Number doesn't exist");
+      return;
+    }
+
+    if (
+      node.right !== null &&
+      node.right.data !== value &&
+      node.right.left === null &&
+      node.right.right === null
+    ) {
+      console.log("Number doesn't exist");
+      return;
+    }
+
     // Case 1: Verify if leaf node then delete
     if (
       node.left !== null &&
@@ -121,6 +142,116 @@ const treeFactory = (array) => {
     ) {
       node.right = null;
       return;
+    }
+
+    // Case 2: Delete node with single child
+    if (node.left !== null && node.left.data === value) {
+      if (node.left.left && node.left.right === null) {
+        node.left = node.left.left;
+        return;
+      }
+      if (node.left.right && node.left.left === null) {
+        node.left = node.left.right;
+        return;
+      }
+    }
+
+    if (node.right != null && node.right.data === value) {
+      if (node.right.left && node.right.right === null) {
+        node.right = node.right.left;
+        return;
+      }
+      if (node.right.right && node.right.left === null) {
+        node.right = node.right.right;
+        return;
+      }
+    }
+
+    // Case 3: Delete node with both children
+    if (node.left.data === value) {
+      // Check if childs are leaf nodes
+      if (
+        node.left.left &&
+        node.left.right &&
+        !(
+          node.left.left.left ||
+          node.left.left.right ||
+          node.left.right.left ||
+          node.left.right.right
+        )
+      ) {
+        const leftGrandChild = node.left.left;
+        node.left.data = leftGrandChild.data;
+        node.left.left = null;
+        return;
+      }
+      // Check if right child has both grandchildren
+      if (
+        node.left.left &&
+        node.left.right &&
+        node.left.right.left &&
+        node.left.right.right
+      ) {
+        const rightChild = node.left.right;
+        const rightLeftGrandChild = node.left.right.left;
+        node.left.data = rightLeftGrandChild.data;
+        rightChild.left = null;
+        return;
+      }
+      // Check if right child has only right grandchild
+      if (node.left.left && node.left.right && node.left.right.left === null) {
+        const rightChild = node.left.right;
+        const rightRightGrandChild = node.left.right.right;
+        node.left.data = rightChild.data;
+        rightChild.data = rightRightGrandChild.data;
+        rightChild.right = null;
+        return;
+      }
+    }
+
+    if (node.right.data === value) {
+      // Check if childs are leaf nodes
+      if (
+        node.right.left &&
+        node.right.right &&
+        !(
+          node.right.left.left ||
+          node.right.left.right ||
+          node.right.right.left ||
+          node.right.right.right
+        )
+      ) {
+        const leftGrandChild = node.right.left;
+        node.right.data = leftGrandChild.data;
+        node.right.left = null;
+        return;
+      }
+      // Check if right child has both grandchildren
+      if (
+        node.right.left &&
+        node.right.right &&
+        node.right.right.left &&
+        node.right.right.right
+      ) {
+        const rightChild = node.right.right;
+        const rightLeftGrandChild = node.right.right.left;
+        node.right.data = rightLeftGrandChild.data;
+        rightChild.left = null;
+        return;
+      }
+      // Check if right child has only right grandchild
+      if (
+        node.right.left &&
+        node.right.right &&
+        node.right.right.left === null
+      ) {
+        const rightChild = node.right.right;
+        const rightRightGrandChild = node.right.right.right;
+        node.right.data = rightChild.data;
+        rightChild.data = rightRightGrandChild.data;
+        rightChild.right = null;
+        return;
+      }
     }
 
     if (value < node.data) {
@@ -154,10 +285,6 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-const tree = treeFactory([1, 7, 4, 23, 8, 9, 4, 3, 5, 76, 67, 6345, 18, 324]);
-prettyPrint(tree.root);
-tree.insert(24);
-tree.insert(25);
-tree.insert(425);
-tree.insert(421);
+const arr1 = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+const tree = treeFactory(arr1);
 prettyPrint(tree.root);
