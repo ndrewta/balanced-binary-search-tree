@@ -261,6 +261,31 @@ const treeFactory = (array) => {
     }
   }
 
+  function find(value, node) {
+    // Search tree for value and return node
+    if (node === undefined) {
+      node = root;
+    }
+
+    // If value doesn't exist
+    if (node === null) {
+      console.log("Number doesn't exist");
+      return;
+    }
+
+    // Console log node
+    if (node.data === value) {
+      console.log(node);
+      return;
+    }
+
+    if (value < node.data) {
+      find(value, node.left);
+    } else {
+      find(value, node.right);
+    }
+  }
+
   // Sort array objects
   const unsortedArr = Array.from(array);
   mergeSort(unsortedArr);
@@ -269,7 +294,12 @@ const treeFactory = (array) => {
   // Build root node
   const root = buildTree(sortedArr);
 
-  return { insert, remove, root };
+  return {
+    insert,
+    remove,
+    find,
+    root,
+  };
 };
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
