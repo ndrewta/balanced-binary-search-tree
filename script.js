@@ -286,6 +286,76 @@ const treeFactory = (array) => {
     }
   }
 
+  function levelOrder(func) {
+    // Breadth first traversal iteration version
+    const queue = [];
+    const traversedQueue = [];
+    queue.push(root);
+
+    while (!queue.length <= 0) {
+      const current = queue.shift();
+
+      // Pass value onto function if available
+      if (func) {
+        func(current);
+      } else {
+        traversedQueue.push(current.data);
+      }
+
+      // Add child to queue
+      if (current.left !== null) {
+        queue.push(current.left);
+      }
+      if (current.right !== null) {
+        queue.push(current.right);
+      }
+    }
+
+    // If no function was provided, return as array
+    if (traversedQueue.length > 0) {
+      return traversedQueue;
+    }
+  }
+
+  function levelOrderRecursion(
+    // Breadth first traversal recursion version
+    func,
+    queue = [],
+    traversedQueue = [],
+    depth = 0
+  ) {
+    // Push root to queue
+    if (depth === 0) {
+      queue.push(root);
+    }
+
+    // Exit when queue is empty
+    if (queue.length <= 0) {
+      // Return traversed queue array if no function was provided
+      if (traversedQueue.length > 0) {
+        return traversedQueue;
+      }
+      return;
+    }
+
+    const current = queue.shift();
+    if (func) {
+      func(current);
+    } else {
+      traversedQueue.push(current.data);
+    }
+
+    // Add child to queue
+    if (current.left !== null) {
+      queue.push(current.left);
+    }
+    if (current.right !== null) {
+      queue.push(current.right);
+    }
+
+    return levelOrderRecursion(func, queue, traversedQueue, depth + 1);
+  }
+
   // Sort array objects
   const unsortedArr = Array.from(array);
   mergeSort(unsortedArr);
@@ -298,6 +368,8 @@ const treeFactory = (array) => {
     insert,
     remove,
     find,
+    levelOrder,
+    levelOrderRecursion,
     root,
   };
 };
