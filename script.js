@@ -268,16 +268,15 @@ const treeFactory = (array) => {
       return;
     }
 
-    // Console log node
+    // Return node
     if (node.data === value) {
-      console.log(node);
-      return;
+      return node;
     }
 
     if (value < node.data) {
-      find(value, node.left);
+      return find(value, node.left);
     } else {
-      find(value, node.right);
+      return find(value, node.right);
     }
   }
 
@@ -421,6 +420,28 @@ const treeFactory = (array) => {
     }
   }
 
+  function findHeight(node, height = -1) {
+    // Find height of node
+
+    if (typeof node === "number") {
+      node = find(node);
+    }
+
+    if (node === undefined) {
+      return;
+    }
+
+    if (node === null) {
+      return height;
+    }
+
+    // Return highest value
+    return Math.max(
+      findHeight(node.left, height + 1),
+      findHeight(node.right, height + 1)
+    );
+  }
+
   // Sort array objects
   const unsortedArr = Array.from(array);
   mergeSort(unsortedArr);
@@ -438,6 +459,7 @@ const treeFactory = (array) => {
     preOrder,
     inOrder,
     postOrder,
+    findHeight,
     root,
   };
 };
