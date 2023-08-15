@@ -69,12 +69,8 @@ const treeFactory = (array) => {
     return node;
   }
 
-  function insert(value, node) {
+  function insert(value, node = root) {
     // Insert value at leaf node
-    if (node === undefined) {
-      node = root;
-    }
-
     if (node.left === null && value < node.data) {
       node.left = nodeFactory(value);
       return;
@@ -96,10 +92,12 @@ const treeFactory = (array) => {
     }
   }
 
-  function remove(value, node) {
+  function remove(value, node = root) {
     // Search for value within tree and delete
-    if (node === undefined) {
-      node = root;
+
+    if (value === root.data) {
+      console.log("Can't remove root node");
+      return;
     }
 
     // If value doesn't exist
@@ -261,11 +259,8 @@ const treeFactory = (array) => {
     }
   }
 
-  function find(value, node) {
+  function find(value, node = root) {
     // Search tree for value and return node
-    if (node === undefined) {
-      node = root;
-    }
 
     // If value doesn't exist
     if (node === null) {
@@ -311,7 +306,7 @@ const treeFactory = (array) => {
       }
     }
 
-    // If no function was provided, return as array
+    // Return array if no function was provided.
     if (traversedQueue.length > 0) {
       return traversedQueue;
     }
@@ -331,7 +326,7 @@ const treeFactory = (array) => {
 
     // Exit when queue is empty
     if (queue.length <= 0) {
-      // Return traversed queue array if no function was provided
+      // Return array if no function was provided.
       if (traversedQueue.length > 0) {
         return traversedQueue;
       }
@@ -356,6 +351,76 @@ const treeFactory = (array) => {
     return levelOrderRecursion(func, queue, traversedQueue, depth + 1);
   }
 
+  function preOrder(func, node = root, traversedArray = []) {
+    // Preorder depth first search
+
+    // Exit when queue is empty
+    if (node === null) {
+      return;
+    }
+
+    if (func) {
+      func(node);
+    } else {
+      traversedArray.push(node.data);
+    }
+
+    preOrder(func, node.left, traversedArray);
+    preOrder(func, node.right, traversedArray);
+
+    // Return array if no function was provided.
+    if (traversedArray.length > 0) {
+      return traversedArray;
+    }
+  }
+
+  function inOrder(func, node = root, traversedArray = []) {
+    // Inorder depth first search
+
+    // Exit when queue is empty
+    if (node === null) {
+      return;
+    }
+
+    inOrder(func, node.left, traversedArray);
+
+    if (func) {
+      func(node);
+    } else {
+      traversedArray.push(node.data);
+    }
+
+    inOrder(func, node.right, traversedArray);
+
+    // Return array if no function was provided.
+    if (traversedArray.length > 0) {
+      return traversedArray;
+    }
+  }
+
+  function postOrder(func, node = root, traversedArray = []) {
+    // Postorder depth first search
+
+    // Exit when queue is empty
+    if (node === null) {
+      return;
+    }
+
+    postOrder(func, node.left, traversedArray);
+    postOrder(func, node.right, traversedArray);
+
+    if (func) {
+      func(node);
+    } else {
+      traversedArray.push(node.data);
+    }
+
+    // Return array if no function was provided.
+    if (traversedArray.length > 0) {
+      return traversedArray;
+    }
+  }
+
   // Sort array objects
   const unsortedArr = Array.from(array);
   mergeSort(unsortedArr);
@@ -370,6 +435,9 @@ const treeFactory = (array) => {
     find,
     levelOrder,
     levelOrderRecursion,
+    preOrder,
+    inOrder,
+    postOrder,
     root,
   };
 };
