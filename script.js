@@ -442,6 +442,29 @@ const treeFactory = (array) => {
     );
   }
 
+  function findDepth(node, tree = root, depth = 0) {
+    // Find depth of node
+
+    if (typeof node === "number") {
+      node = find(node);
+    }
+
+    if (node === undefined) {
+      return;
+    }
+
+    if (node.data === tree.data) {
+      return depth;
+    }
+
+    if (node.data < tree.data) {
+      return findDepth(node, tree.left, depth + 1);
+    }
+    if (node.data > tree.data) {
+      return findDepth(node, tree.right, depth + 1);
+    }
+  }
+
   // Sort array objects
   const unsortedArr = Array.from(array);
   mergeSort(unsortedArr);
@@ -460,6 +483,7 @@ const treeFactory = (array) => {
     inOrder,
     postOrder,
     findHeight,
+    findDepth,
     root,
   };
 };
