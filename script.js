@@ -465,6 +465,26 @@ const treeFactory = (array) => {
     }
   }
 
+  function isBalanced(node = root) {
+    // Check child height discrepancy of every node; no more than 1
+
+    if (node === null) {
+      return true;
+    }
+
+    const a = findHeight(node.left) + 1;
+    const b = findHeight(node.right) + 1;
+
+    if (Math.abs(a - b) > 1) {
+      return false;
+    }
+
+    if (isBalanced(node.left) && isBalanced(node.right)) {
+      return true;
+    }
+    return false;
+  }
+
   // Sort array objects
   const unsortedArr = Array.from(array);
   mergeSort(unsortedArr);
@@ -484,6 +504,7 @@ const treeFactory = (array) => {
     postOrder,
     findHeight,
     findDepth,
+    isBalanced,
     root,
   };
 };
