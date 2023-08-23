@@ -69,7 +69,7 @@ const treeFactory = (array) => {
     return node;
   }
 
-  function insert(value, node = root) {
+  function insert(value, node = this.root) {
     // Insert value at leaf node
     if (node.left === null && value < node.data) {
       node.left = nodeFactory(value);
@@ -92,31 +92,15 @@ const treeFactory = (array) => {
     }
   }
 
-  function remove(value, node = root) {
+  function remove(value, node = this.root) {
     // Search for value within tree and delete
-
     if (value === root.data) {
       console.log("Can't remove root node");
       return;
     }
 
     // If value doesn't exist
-    if (
-      node.left !== null &&
-      node.left.data !== value &&
-      node.left.left === null &&
-      node.left.right === null
-    ) {
-      console.log("Number doesn't exist");
-      return;
-    }
-
-    if (
-      node.right !== null &&
-      node.right.data !== value &&
-      node.right.left === null &&
-      node.right.right === null
-    ) {
+    if (node.data !== value && node.left === null && node.right === null) {
       console.log("Number doesn't exist");
       return;
     }
@@ -259,7 +243,7 @@ const treeFactory = (array) => {
     }
   }
 
-  function find(value, node = root) {
+  function find(value, node = this.root) {
     // Search tree for value and return node
 
     // If value doesn't exist
@@ -280,12 +264,11 @@ const treeFactory = (array) => {
     }
   }
 
-  function levelOrder(func) {
+  function levelOrder(func, tree = this.root) {
     // Breadth first traversal iteration version
     const queue = [];
     const traversedQueue = [];
-    queue.push(root);
-
+    queue.push(tree);
     while (!queue.length <= 0) {
       const current = queue.shift();
 
@@ -312,15 +295,17 @@ const treeFactory = (array) => {
   }
 
   function levelOrderRecursion(
-    // Breadth first traversal recursion version
     func,
+    tree = this.root,
     queue = [],
     traversedQueue = [],
     depth = 0
   ) {
+    // Breadth first traversal recursion version
+
     // Push root to queue
     if (depth === 0) {
-      queue.push(root);
+      queue.push(tree);
     }
 
     // Exit when queue is empty
@@ -347,10 +332,10 @@ const treeFactory = (array) => {
       queue.push(current.right);
     }
 
-    return levelOrderRecursion(func, queue, traversedQueue, depth + 1);
+    return levelOrderRecursion(func, tree, queue, traversedQueue, depth + 1);
   }
 
-  function preOrder(func, node = root, traversedArray = []) {
+  function preOrder(func, node = this.root, traversedArray = []) {
     // Preorder depth first search
 
     // Exit when queue is empty
@@ -373,7 +358,7 @@ const treeFactory = (array) => {
     }
   }
 
-  function inOrder(func, node = root, traversedArray = []) {
+  function inOrder(func, node = this.root, traversedArray = []) {
     // Inorder depth first search
 
     // Exit when queue is empty
@@ -397,7 +382,7 @@ const treeFactory = (array) => {
     }
   }
 
-  function postOrder(func, node = root, traversedArray = []) {
+  function postOrder(func, node = this.root, traversedArray = []) {
     // Postorder depth first search
 
     // Exit when queue is empty
@@ -424,7 +409,7 @@ const treeFactory = (array) => {
     // Find height of node
 
     if (typeof node === "number") {
-      node = find(node);
+      node = find(node, this.root);
     }
 
     if (node === undefined) {
@@ -442,11 +427,11 @@ const treeFactory = (array) => {
     );
   }
 
-  function findDepth(node, tree = root, depth = 0) {
+  function findDepth(node, tree = this.root, depth = 0) {
     // Find depth of node
 
     if (typeof node === "number") {
-      node = find(node);
+      node = find(node, tree);
     }
 
     if (node === undefined) {
@@ -465,7 +450,7 @@ const treeFactory = (array) => {
     }
   }
 
-  function isBalanced(node = root) {
+  function isBalanced(node = this.root) {
     // Check child height discrepancy of every node; no more than 1
 
     if (node === null) {
@@ -482,7 +467,17 @@ const treeFactory = (array) => {
     if (isBalanced(node.left) && isBalanced(node.right)) {
       return true;
     }
+
     return false;
+  }
+
+  function rebalance() {
+    // Rebalance tree
+
+    const unbalancedArr = levelOrderRecursion(undefined, this.root);
+    mergeSort(unbalancedArr);
+    const sortedArr = Array.from(new Set(unbalancedArr));
+    this.root = buildTree(sortedArr);
   }
 
   // Sort array objects
@@ -491,7 +486,7 @@ const treeFactory = (array) => {
   const sortedArr = Array.from(new Set(unsortedArr));
 
   // Build root node
-  const root = buildTree(sortedArr);
+  let root = buildTree(sortedArr);
 
   return {
     insert,
@@ -505,6 +500,7 @@ const treeFactory = (array) => {
     findHeight,
     findDepth,
     isBalanced,
+    rebalance,
     root,
   };
 };
@@ -524,4 +520,5 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 
 const arr1 = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = treeFactory(arr1);
+
 prettyPrint(tree.root);
