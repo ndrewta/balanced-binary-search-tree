@@ -1,6 +1,3 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable no-console */
-
 const nodeFactory = (data) => {
   const left = null;
   const right = null;
@@ -518,7 +515,35 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-const arr1 = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-const tree = treeFactory(arr1);
+function run() {
+  function randomArray() {
+    const arr = [];
+    while (arr.length < 20) {
+      arr.push(Math.floor(Math.random() * 100));
+    }
+    return arr;
+  }
+  function unbalance(tree) {
+    for (let i = 0; i < 5; i++) {
+      tree.insert(Math.floor(Math.random() * 1000) + 100);
+    }
+  }
 
-prettyPrint(tree.root);
+  const arr = randomArray();
+  const tree = treeFactory(arr);
+
+  console.log("Is tree balanced?", tree.isBalanced());
+  console.log("Pre order", tree.preOrder());
+  console.log("In order", tree.inOrder());
+  console.log("Post order", tree.postOrder());
+  console.log("Unbalance tree", unbalance(tree));
+  console.log("Is tree balanced?", tree.isBalanced());
+  console.log("Balance tree", tree.rebalance());
+  console.log("Is tree balanced?", tree.isBalanced());
+  console.log("Pre order", tree.preOrder());
+  console.log("In order", tree.inOrder());
+  console.log("Post order", tree.postOrder());
+  prettyPrint(tree.root);
+}
+
+run();
